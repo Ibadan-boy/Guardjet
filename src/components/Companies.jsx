@@ -28,7 +28,7 @@ function Companies() {
         </h2>
         <div className="space-y-4 mb-4 max-w-2xl mx-auto">
           <p className="text-base md:text-lg text-gray-600">
-            Explore our collection for authentic tech innovation from the best in the industry.
+            Explore our collections for authentic tech innovation from the best in the industry.
           </p>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6">
