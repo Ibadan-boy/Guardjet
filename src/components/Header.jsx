@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ShoppingCart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 
 function Header() {
@@ -17,8 +18,8 @@ function Header() {
 
           {/* Navigation Links (Desktop) */}
           <div className="hidden md:flex items-center space-x-6">
-            <a href="#signin" className="hover:text-gray-300">Sign in</a>
-            <a href="#products" className="hover:text-gray-300">Products</a>
+            <Link to="/login" className="hover:text-gray-300">Sign in</Link>
+            <a href="#products" className="hover:text-gray-300">Store</a>
             <a href="#about" className="hover:text-gray-300">About</a>
             <a href="#contact" className="hover:text-gray-300">Contact</a>
           </div>
@@ -62,11 +63,11 @@ function Header() {
       {isOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <a href="#signin" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base">
+            <Link to="/login" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base">
               Sign in
-            </a>
+            </Link>
             <a href="#products" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base">
-              Products
+              Store
             </a>
             <a href="#about" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base">
               About

@@ -1,6 +1,6 @@
 import Button from "../ui/Button";
 
-function Hero({image}) {
+function Hero({image, onClick}) {
   return (
     <section className="relative bg-[#0A192F] text-white py-24"
     style={{backgroundImage: `url(${image})`,
@@ -19,6 +19,7 @@ function Hero({image}) {
         </p> */}
         <Button
           variant="primary"
+          onClick={onClick}
           className="text-lg px-6 py-3 bg-[#2563EB] rounded-full hover:bg-[#1E40AF] cursor-pointer"
         >
           Shop Now
