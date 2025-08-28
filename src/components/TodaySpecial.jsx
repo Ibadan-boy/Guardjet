@@ -19,7 +19,7 @@ function TodaysSpecial() {
     return () => clearInterval(interval);
   }, []);
 
-  // Handle manual navigation
+  // manual navigation
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + products.length) % products.length);
   };
@@ -62,17 +62,17 @@ function TodaysSpecial() {
                 <p className="text-gray-600 mb-4">{products[currentIndex].description}</p>
                 <p className="text-xl font-bold text-[#0A192F] mb-4">${products[currentIndex].price.toFixed(2)}</p>
                 <button className="px-6 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-full">
-                  Shop Now
+                  Buy Now
                 </button>
               </div>
             </motion.div>
           </AnimatePresence>
-          {/* Navigation Buttons */}
+          
           <button
             onClick={handlePrev}
             className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-slate-600 text-white p-2 rounded-full hover:bg-slate-700"
           >
-            ←
+            
           </button>
           <button
             onClick={handleNext}

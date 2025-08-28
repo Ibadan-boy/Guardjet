@@ -12,6 +12,7 @@ import TodaysSpecial from "../components/TodaySpecial";
 import TransactionImg from "../assets/Images/transaction-image.jpg";
 import OrderTracking from "../assets/Images/order-tracking.jpg";
 import { useNavigate } from "react-router-dom";
+import ProductItem from "../components/ProductItem";
 
 export default function LandingPage(){
 
