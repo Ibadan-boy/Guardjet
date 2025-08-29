@@ -1,12 +1,37 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect, use } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Modal from '../ui/Modal';
 
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [ modalOpen, setModalOpen] = useState(false);
+  const modalRef = useRef();
+
+  useEffect(() => {
+    if(modalOpen){
+      modalRef.current.open();
+    }
+  }, [modalOpen])
 
   return (
+    <>
+     {modalOpen && <Modal ref={modalRef}>
+      <div className="p-4">
+        <h2 className="text-2xl font-bold mb-4">Cart</h2>
+        <p>Your cart is currently empty.</p>
+        <button
+          onClick={() => {
+            modalRef.current.close();
+            setModalOpen(false);
+          }}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Close
+        </button>
+      </div>
+    </Modal>}
     <nav className="bg-gray-900 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
@@ -26,8 +51,10 @@ function Header() {
 
           {/* Cart Button (Desktop) */}
           <div className="hidden md:flex items-center">
-            <a href="/cart" className="hover:bg-slate-700 text-white px-6 py-4 rounded-md">
-              <ShoppingCart strokeWidth={3}/>
+            <a className="hover:bg-slate-700 text-white px-6 py-4 rounded-md">
+              <ShoppingCart onClick={() => {
+            setModalOpen(true);
+          }} strokeWidth={3}/>
             </a>
           </div>
 
@@ -76,7 +103,10 @@ function Header() {
               Contact
             </a>
             <a
-              href="/cart"
+              onClick={() => {
+                setModalOpen(true);
+                setIsOpen(false);
+              }}
               className="block bg-blue-800 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-base mt-2"
             >
               Cart (0)
@@ -85,6 +115,7 @@ function Header() {
         </div>
       )}
     </nav>
+    </>
   );
 }
 

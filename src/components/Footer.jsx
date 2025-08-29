@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 function Footer() {
   return (
@@ -35,8 +36,8 @@ function Footer() {
           <div>
             <h3 className="text-xl font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="#home" className="text-sm hover:text-gray-300">Sign In</a></li>
-              <li><a href="#products" className="text-sm hover:text-gray-300">Products</a></li>
+              <li><Link to="login" className="text-sm hover:text-gray-300">Sign In</Link></li>
+              <li><Link to="shop" className="text-sm hover:text-gray-300">Products</Link></li>
               <li><a href="#about" className="text-sm hover:text-gray-300">About Us</a></li>
               <li><a href="#contact" className="text-sm hover:text-gray-300">Contact</a></li>
             </ul>

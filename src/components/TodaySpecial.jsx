@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import HeadsetImg from '../assets/Images/headset-image.jpg';
+import { Link } from 'react-router-dom';
 
 const products = [
   { id: 1, name: 'Premium Coffee Maker', description: 'Brews perfect coffee every time.', price: 99.99, imageSrc: HeadsetImg },
@@ -61,9 +62,9 @@ function TodaysSpecial() {
                 <h3 className="text-2xl font-semibold text-[#0A192F] mb-2">{products[currentIndex].name}</h3>
                 <p className="text-gray-600 mb-4">{products[currentIndex].description}</p>
                 <p className="text-xl font-bold text-[#0A192F] mb-4">${products[currentIndex].price.toFixed(2)}</p>
-                <button className="px-6 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-full">
+                <Link to= 'shop'><button className="px-6 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-full">
                   Buy Now
-                </button>
+                </button></Link>
               </div>
             </motion.div>
           </AnimatePresence>
