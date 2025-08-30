@@ -1,7 +1,8 @@
 export default function ProductItem({ 
-  image = keyboardImg, 
-  name = 'Mechanical Gaming Keyboard', 
-  price = '$99.99' 
+  image, 
+  name , 
+  price,
+  onClick
 }) {
   return (
     <li className="list-none w-full 
@@ -69,7 +70,9 @@ export default function ProductItem({
                              font-medium">
             Buy Now
           </button>
-          <button className="flex-1 
+          <button
+          onClick={onClick} 
+          className="flex-1 
                              bg-slate-600 hover:bg-slate-700 
                              active:bg-slate-800
                              text-white 

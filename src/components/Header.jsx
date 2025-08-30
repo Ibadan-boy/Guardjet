@@ -2,9 +2,10 @@ import { useState, useRef, useEffect, use } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Modal from '../ui/Modal';
+import Cart from './Cart';
 
 
-function Header() {
+function Header({cart}) {
   const [isOpen, setIsOpen] = useState(false);
   const [ modalOpen, setModalOpen] = useState(false);
   const modalRef = useRef();
@@ -15,22 +16,11 @@ function Header() {
     }
   }, [modalOpen])
 
+  
   return (
     <>
      {modalOpen && <Modal ref={modalRef}>
-      <div className="p-4">
-        <h2 className="text-2xl font-bold mb-4">Cart</h2>
-        <p>Your cart is currently empty.</p>
-        <button
-          onClick={() => {
-            modalRef.current.close();
-            setModalOpen(false);
-          }}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Close
-        </button>
-      </div>
+      <Cart cart={cart}/>
     </Modal>}
     <nav className="bg-gray-900 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

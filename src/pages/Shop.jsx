@@ -4,17 +4,21 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useState } from 'react';
 
-export default function Shop() {
+export default function Shop({ cart }) {
 
   const [search, setSearch] = useState('');
 
   const filteredProducts = dummyProducts.filter(product =>
     product.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  function handleAddToCart(product) {
+    console.log(`Added ${product.name} to cart.`);
+  }
   return (
     <>
       <div className="container mx-auto px-4 py-8">
-        <Header />
+        <Header cart={cart}/>
         <header className="mb-8">
           <h1 className="text-4xl font-bold text-gray-800 text-center md:text-left">Our Shop</h1>
           <p className="text-lg text-gray-600 mt-2 text-center md:text-left">Browse our collection of premium products</p>
@@ -39,6 +43,7 @@ export default function Shop() {
         <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.length > 0 ? (filteredProducts.map((product) => (
             <ProductItem
+              onClick={() => handleAddToCart(product)}
               key={product.id}
               {...product}
             />
