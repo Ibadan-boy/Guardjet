@@ -2,18 +2,37 @@ import { dummyProducts } from '../util/data';
 import ProductItem from '../components/ProductItem';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import { CartContext } from '../API/cartContext';
 
 export default function Shop({ cart }) {
 
   const [search, setSearch] = useState('');
+  const [ products, setProducts ] = useState([]);
 
-  const filteredProducts = dummyProducts.filter(product =>
-    product.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const { addItemToCart } = useContext(CartContext);
+
+  // const filteredProducts = dummyProducts.filter(product =>
+  //   product.name.toLowerCase().includes(search.toLowerCase())
+  // );
+
+  useEffect(() => {
+    async function fetchProducts(){
+      try{
+        const response = await fetch('https://fakestoreapi.com/products');
+        const data = await response.json();
+        setProducts(data);
+      } catch (error){
+        console.error('Error fetching products:', error);
+      }
+    }
+
+    fetchProducts();
+  })
 
   function handleAddToCart(product) {
     console.log(`Added ${product.name} to cart.`);
+    addItemToCart(product);
   }
   return (
     <>
@@ -41,7 +60,7 @@ export default function Shop({ cart }) {
         </header>
 
         <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredProducts.length > 0 ? (filteredProducts.map((product) => (
+          {products.length > 0 ? (products.map((product) => (
             <ProductItem
               onClick={() => handleAddToCart(product)}
               key={product.id}

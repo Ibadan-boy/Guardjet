@@ -48,7 +48,7 @@ export default function ProductItem({
                         text-lg xs:text-xl sm:text-2xl 
                         font-bold text-blue-600
                         mt-auto">
-            {price}
+            ₦{price}
           </p>
         </div>
 

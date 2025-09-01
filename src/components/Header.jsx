@@ -1,27 +1,42 @@
-import { useState, useRef, useEffect, use } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Modal from '../ui/Modal';
-import Cart from './Cart';
+import CartModal from './CartModal';
+import { CartContext } from '../API/cartContext';
 
 
-function Header({cart}) {
+function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const [ modalOpen, setModalOpen] = useState(false);
   const modalRef = useRef();
+  const { items } = useContext(CartContext)
 
-  useEffect(() => {
-    if(modalOpen){
-      modalRef.current.open();
-    }
-  }, [modalOpen])
+
+  // useEffect(() => {
+  //   if(modalOpen){
+  //     modalRef.current.open();
+  //   }
+  // }, [modalOpen])
+
+  function handleOpenCartClick() {
+    modalRef.current.open();
+  }
+
+  let modalActions = <button>Close</button>;
+  const cartQuantity = items.length
+
+  if (cartQuantity > 0) {
+    modalActions = (
+      <>
+        <button>Close</button>
+        <button>Checkout</button>
+      </>
+    );
+  }
 
   
   return (
     <>
-     {modalOpen && <Modal ref={modalRef}>
-      <Cart cart={cart}/>
-    </Modal>}
+    <CartModal ref={modalRef} title = 'Your Cart' actions = {modalActions}/>
     <nav className="bg-gray-900 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
@@ -42,9 +57,7 @@ function Header({cart}) {
           {/* Cart Button (Desktop) */}
           <div className="hidden md:flex items-center">
             <a className="hover:bg-slate-700 text-white px-6 py-4 rounded-md">
-              <ShoppingCart onClick={() => {
-            setModalOpen(true);
-          }} strokeWidth={3}/>
+              <ShoppingCart onClick={handleOpenCartClick} strokeWidth={3}/>
             </a>
           </div>
 
@@ -93,10 +106,7 @@ function Header({cart}) {
               Contact
             </a>
             <a
-              onClick={() => {
-                setModalOpen(true);
-                setIsOpen(false);
-              }}
+              onClick={handleOpenCartClick}
               className="block bg-blue-800 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-base mt-2"
             >
               Cart (0)

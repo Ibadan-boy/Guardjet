@@ -1,37 +1,76 @@
-const Cart = ({ cart }) => {
-  return (
-    <div className="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-6 mt-6">
-      <h2 className="text-xl font-bold text-gray-800 border-b pb-3 mb-4">
-        Your Cart
-      </h2>
+import { CartContext } from '../API/cartContext';
+import { useContext } from 'react';
 
-      {cart.length === 0 ? (
-        <p className="text-gray-500 text-center">Your cart is empty.</p>
-      ) : (
-        <ul className="divide-y divide-gray-200">
-          {cart.map((item, index) => (
-            <li
-              key={index}
-              className="flex justify-between items-center py-3"
-            >
-              <span className="font-medium text-gray-700">{item.name}</span>
-              <span className="text-gray-600">${item.price}</span>
-            </li>
-          ))}
+export default function Cart() {
+  const { items, updateCartItemQuantity } = useContext(CartContext);
+
+  const totalPrice = items.reduce(
+    (acc, item) => acc + Number(item.price) * item.quantity,
+    0
+  );
+  const formattedTotalPrice = `₦${totalPrice.toFixed(2)}`;
+
+  return (
+    <div
+      id="cart"
+      className="max-w-lg mx-auto mt-8 p-6 bg-white shadow-lg rounded-2xl"
+    >
+      {items.length === 0 && (
+        <p className="text-center text-gray-500 font-medium">
+          No items in cart!
+        </p>
+      )}
+
+      {items.length > 0 && (
+        <ul id="cart-items" className="divide-y divide-gray-200">
+          {items.map((item) => {
+            const formattedPrice = `₦${Number(item.price).toFixed(2)}`;
+
+            return (
+              <li
+                key={item.id}
+                className="flex items-center justify-between py-4"
+              >
+                {/* Item Info */}
+                <div className="flex flex-col">
+                  <span className="text-gray-800 font-semibold">
+                    {item.name}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    {formattedPrice}
+                  </span>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={() => updateCartItemQuantity(item.id, -1)}
+                    className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                  >
+                    -
+                  </button>
+                  <span className="text-gray-700 font-medium">
+                    {item.quantity}
+                  </span>
+                  <button
+                    onClick={() => updateCartItemQuantity(item.id, 1)}
+                    className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                  >
+                    +
+                  </button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
 
-      {cart.length > 0 && (
-        <div className="flex justify-between items-center border-t pt-4 mt-4">
-          <span className="font-semibold text-gray-800">Total:</span>
-          <span className="font-bold text-indigo-600">
-            $
-            {cart.reduce((acc, item) => acc + item.price, 0).toFixed(2)}
-          </span>
-        </div>
-      )}
+      <p
+        id="cart-total-price"
+        className="mt-6 text-lg font-semibold text-gray-800 text-right"
+      >
+        Cart Total: <strong className="text-indigo-600">{formattedTotalPrice}</strong>
+      </p>
     </div>
   );
-};
-
-export default Cart;
+}
