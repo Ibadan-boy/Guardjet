@@ -1,6 +1,6 @@
 export default function ProductItem({ 
   image, 
-  name , 
+  title, 
   price,
   onClick
 }) {
@@ -24,7 +24,7 @@ export default function ProductItem({
                         overflow-hidden">
           <img
             src={image}
-            alt={name}
+            alt={title}
             className="w-full h-full object-cover 
                        border-b border-gray-100
                        transition-transform duration-300
@@ -42,7 +42,7 @@ export default function ProductItem({
                          font-semibold text-gray-800 
                          leading-tight line-clamp-2
                          min-h-[2.5rem] xs:min-h-[3rem]">
-            {name}
+            {title}
           </h2>
           <p className="m-0 
                         text-lg xs:text-xl sm:text-2xl 
