@@ -1,116 +1,132 @@
-import { createContext, useReducer} from 'react';
-import { dummyProducts } from '../util/data';
+import { createContext, useReducer, useEffect } from 'react';
 
 export const CartContext = createContext({
-    items: [],
-    addItemToCart: ()=> {},
-    updateCartItemQuantity: ()=> {}
+  items: [],
+  addItemToCart: () => {},
+  updateCartItemQuantity: () => {},
+  clearCart: () => {}
 });
 
-
-//reducer function
-function shoppingCartReducer(state, action){
-  //if we're adding item
-  if(action.type=== 'ADD_ITEM'){
+// Reducer function (unchanged)
+function shoppingCartReducer(state, action) {
+  if (action.type === 'ADD_ITEM') {
     const updatedItems = [...state.items];
+    const existingCartItemIndex = updatedItems.findIndex(
+      (cartItem) => cartItem.id === action.payload.id
+    );
+    const existingCartItem = updatedItems[existingCartItemIndex];
 
-      const existingCartItemIndex = updatedItems.findIndex(
-        (cartItem) => cartItem.id === action.payload.id
-      );
-      const existingCartItem = updatedItems[existingCartItemIndex];
-
-      if (existingCartItem) {
-        const updatedItem = {
-          ...existingCartItem,
-          quantity: existingCartItem.quantity + 1,
-        };
-        updatedItems[existingCartItemIndex] = updatedItem;
-      } else {
-        // const product = dummyProducts.find((product) => product.id === action.payload);
-        updatedItems.push({
-          id: action.payload.id,
-          name: action.payload.title,
-          price: action.payload.price,
-          quantity: 1,
-        });
-      }
-
-      return {
-        ...state,
-        items: updatedItems,
-      };
-  };
-   
-  if(action.type=== 'UPDATE_ITEM'){
-      const updatedItems = [...state.items];
-      const updatedItemIndex = updatedItems.findIndex(
-        (item) => item.id === action.payload.productId
-      );
-
+    if (existingCartItem) {
       const updatedItem = {
-        ...updatedItems[updatedItemIndex],
+        ...existingCartItem,
+        quantity: existingCartItem.quantity + 1,
       };
+      updatedItems[existingCartItemIndex] = updatedItem;
+    } else {
+      updatedItems.push({
+        id: action.payload.id,
+        name: action.payload.title,
+        price: action.payload.price,
+        quantity: 1,
+      });
+    }
 
-      updatedItem.quantity += action.payload.amount;
-
-      if (updatedItem.quantity <= 0) {
-        updatedItems.splice(updatedItemIndex, 1);
-      } else {
-        updatedItems[updatedItemIndex] = updatedItem;
-      }
-
-      return {
-        ...state,
-        items: updatedItems,
-      };
-    
+    return {
+      ...state,
+      items: updatedItems,
+    };
   }
-  return state
-      
+
+  if (action.type === 'CLEAR_CART') {
+    return {
+      ...state,
+      items: [],
+    };
+  }
+
+  if (action.type === 'UPDATE_ITEM') {
+    const updatedItems = [...state.items];
+    const updatedItemIndex = updatedItems.findIndex(
+      (item) => item.id === action.payload.productId
+    );
+
+    const updatedItem = {
+      ...updatedItems[updatedItemIndex],
+    };
+
+    updatedItem.quantity += action.payload.amount;
+
+    if (updatedItem.quantity <= 0) {
+      updatedItems.splice(updatedItemIndex, 1);
+    } else {
+      updatedItems[updatedItemIndex] = updatedItem;
+    }
+
+    return {
+      ...state,
+      items: updatedItems,
+    };
+  }
+
+  return state;
 }
 
+export default function CartContentProvider({ children }) {
+  const [shoppingCartState, shoppingCartDispatch] = useReducer(
+    shoppingCartReducer,
+    {
+      items: (() => {
+        try {
+          const savedItems = localStorage.getItem('cartItems');
+          return savedItems ? JSON.parse(savedItems) : [];
+        } catch (e) {
+          console.error('Failed to load from localStorage:', e);
+          return [];
+        }
+      })()
+    }
+  );
 
+  // Sync cart state to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('cartItems', JSON.stringify(shoppingCartState.items));
+    } catch (e) {
+      console.error('Failed to save to localStorage:', e);
+    }
+  }, [shoppingCartState.items]);
 
-export default function CartContentProvider({ children }){
-
-    const [ shoppingCartState, shoppingCartDispatch ] = useReducer(
-      shoppingCartReducer,
-      {
-        items: []
-      }
-    )
-
-  
-    
-
-  function handleAddItemToCart(product){
-
+  function handleAddItemToCart(product) {
     shoppingCartDispatch({
       type: 'ADD_ITEM',
-      payload: product
+      payload: product,
     });
- }
-  
- function handleUpdateCartItemQuantity(productId, amount) {
+  }
+
+  function handleUpdateCartItemQuantity(productId, amount) {
     shoppingCartDispatch({
       type: 'UPDATE_ITEM',
       payload: {
         productId,
-        amount
-      }
-    })
+        amount,
+      },
+    });
   }
+
+  function handleClearCart() {
+    shoppingCartDispatch({ type: 'CLEAR_CART' });
+  };
 
   const ctxValue = {
     items: shoppingCartState.items,
     addItemToCart: handleAddItemToCart,
-    updateCartItemQuantity: handleUpdateCartItemQuantity
-  }
+    updateCartItemQuantity: handleUpdateCartItemQuantity,
+    clearCart: handleClearCart
+  };
 
-  return(
+  return (
     <CartContext.Provider value={ctxValue}>
-        {children}
+      {children}
     </CartContext.Provider>
-  )
-
+  );
 }

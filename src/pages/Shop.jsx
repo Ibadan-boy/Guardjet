@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ProductItem from "../components/ProductItem";
@@ -8,8 +8,7 @@ export default function Shop({ cart }) {
   const [search, setSearch] = useState('');
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [ productCount, setProductCount ] = useState(8)
-
+  const [productCount, setProductCount] = useState(8);
   const { addItemToCart } = useContext(CartContext);
 
   useEffect(() => {
@@ -27,19 +26,20 @@ export default function Shop({ cart }) {
         const response = await fakeStore.json();
         const dummyjson = await dummyData.json();
 
+        // Log to inspect product data
         console.log("FakeStore Products:", response);
         console.log("DummyJSON Products:", dummyjson.products);
 
-        // Merge both product arrays
         // Merge both product arrays but fix IDs
         const combinedProducts = [
-          ...response.map((p) => ({ ...p, id: `fs-${p.id}`, image: p.image })),      // FakeStore
-          ...dummyjson.products.map((p) => ({ ...p, id: `dj-${p.id}`, image: p.images[0] })), // DummyJSON
+          ...response.map((p) => ({ ...p, id: `fs-${p.id}`, image: p.image })),
+          ...dummyjson.products.map((p) => ({ ...p, id: `dj-${p.id}`, image: p.images[0] })),
         ];
 
         setProducts(combinedProducts);
       } catch (error) {
         console.error("Error fetching products:", error);
+        setProducts([]); // Set empty array on error to avoid breaking
       } finally {
         setIsLoading(false);
       }
@@ -48,19 +48,29 @@ export default function Shop({ cart }) {
     fetchProducts();
   }, []);
 
+  // Filter products based on search input
+  const filteredProducts = useMemo(() => {
+    if (!search.trim()) return products; // Return all products if search is empty
+    return products.filter((product) => {
+      // Safely access title or name, default to empty string
+      const productName = (product.title || product.name || '').toLowerCase();
+      return productName.includes(search.toLowerCase().trim());
+    });
+  }, [products, search]);
+
   function handleAddToCart(product) {
     console.log(`Added ${product.name || product.title} to cart.`);
     addItemToCart(product);
   }
 
   const handleLoadMore = () => {
-    setProductCount(productCount + 8)
-  }
+    setProductCount(productCount + 8);
+  };
 
   return (
     <>
       <div className="container mx-auto px-4 py-8">
-        <Header cart={cart}/>
+        <Header cart={cart} />
 
         <header className="mb-8">
           <h1 className="text-4xl font-bold text-gray-800 text-center md:text-left">Our Shop</h1>
@@ -68,7 +78,7 @@ export default function Shop({ cart }) {
             Browse our collection of premium products
           </p>
 
-          {/* Optional Filter/Search Bar */}
+          {/* Search Bar */}
           <div className="mt-4 flex flex-col sm:flex-row gap-4 justify-between items-center">
             <input
               type="text"
@@ -76,6 +86,7 @@ export default function Shop({ cart }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full sm:w-1/3 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-700"
+              aria-label="Search products"
             />
             <select className="w-full sm:w-1/4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-700">
               <option value="">Sort by: Featured</option>
@@ -90,8 +101,8 @@ export default function Shop({ cart }) {
           <p className="text-center text-gray-500 mt-8">Loading products...</p>
         ) : (
           <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.length > 0 ? (
-              products.slice(0, productCount).map((product) => (
+            {filteredProducts.length > 0 ? (
+              filteredProducts.slice(0, productCount).map((product) => (
                 <ProductItem
                   onClick={() => handleAddToCart(product)}
                   key={product.id}
@@ -100,17 +111,22 @@ export default function Shop({ cart }) {
               ))
             ) : (
               <p className="text-center text-gray-500 col-span-full">
-                No products found.
+                {search.trim() ? 'No products match your search.' : 'No products found.'}
               </p>
             )}
           </ul>
         )}
 
-        {productCount < products.length && (<button onClick={handleLoadMore} className="mt-8 px-6 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-full mx-auto block">
-          Load More
-        </button>)}
+        {productCount < filteredProducts.length && (
+          <button
+            onClick={handleLoadMore}
+            className="mt-8 cursor-pointer px-6 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-full mx-auto block"
+          >
+            Load More
+          </button>
+        )}
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 }

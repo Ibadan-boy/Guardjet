@@ -71,6 +71,8 @@ export default function Cart() {
       >
         Cart Total: <strong className="text-indigo-600">{formattedTotalPrice}</strong>
       </p>
+
+      <p>Clear Cart</p>
     </div>
   );
 }

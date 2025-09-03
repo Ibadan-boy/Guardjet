@@ -3,12 +3,14 @@ import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CartModal from './CartModal';
 import { CartContext } from '../API/cartContext';
+import { useNavigate } from 'react-router-dom';
 
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef();
-  const { items } = useContext(CartContext)
+  const { items, clearCart } = useContext(CartContext)
+  const navigate = useNavigate();
 
 
   // useEffect(() => {
@@ -28,10 +30,15 @@ function Header() {
     modalActions = (
       <>
         <button>Close</button>
+        <button onClick={clearCart}>Clear Cart</button>
         <button>Checkout</button>
       </>
     );
   }
+
+  // function handleStoreNavigate() {
+  //   navigate('/shop');
+  // }
 
   
   return (
@@ -49,8 +56,7 @@ function Header() {
           {/* Navigation Links (Desktop) */}
           <div className="hidden md:flex items-center space-x-6">
             <Link to="/login" className="hover:text-gray-300">Sign in</Link>
-            <a href="#products" className="hover:text-gray-300">Store</a>
-            <a href="#about" className="hover:text-gray-300">About</a>
+            <Link to='/shop' className="hover:text-gray-300">Store</Link>
             <a href="#contact" className="hover:text-gray-300">Contact</a>
           </div>
 
@@ -96,12 +102,9 @@ function Header() {
             <Link to="/login" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base">
               Sign in
             </Link>
-            <a href="#products" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base">
+            <Link to="/shop" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base">
               Store
-            </a>
-            <a href="#about" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base">
-              About
-            </a>
+            </Link>
             <a href="#contact" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base">
               Contact
             </a>

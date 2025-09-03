@@ -63,7 +63,8 @@ export default function ProductItem({
                              text-sm xs:text-base
                              py-2.5 xs:py-3 sm:py-2.5 
                              px-4 xs:px-6
-                             rounded-full 
+                             rounded-full
+                             cursor-pointer
                              transition-all duration-300 ease-in-out
                              hover:shadow-md
                              focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2
@@ -80,6 +81,7 @@ export default function ProductItem({
                              py-2.5 xs:py-3 sm:py-2.5 
                              px-4 xs:px-6
                              rounded-full 
+                             cursor-pointer
                              transition-all duration-300 ease-in-out
                              hover:shadow-md
                              focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2
